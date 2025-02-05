@@ -1,7 +1,15 @@
 # string_calculator.py
 
 class StringCalculator:
+    def __init__(self):
+        self._call_count = 0
+
+    def get_called_count(self) -> int:
+        return self._call_count
+
     def add(self, numbers: str) -> int:
+        self._call_count += 1
+
         if not numbers:
             return 0
 
@@ -25,8 +33,6 @@ class StringCalculator:
                 total += value
 
         if negatives:
-            # raise an exception with all the negatives
-            negatives_str = ",".join(str(x) for x in negatives)
-            raise Exception(f"Negatives not allowed: {negatives_str}")
+            raise Exception(f"Negatives not allowed: {','.join(map(str, negatives))}")
 
         return total
