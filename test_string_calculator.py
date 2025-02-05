@@ -22,3 +22,9 @@ def test_two_numbers_comma_delimited():
 def test_unknown_amount_of_numbers():
     calculator = StringCalculator()
     assert calculator.add("1,2,3,4") == 10
+
+
+def test_newline_delimiter():
+    calculator = StringCalculator()
+    # "1\n2,3" => 6
+    assert calculator.add("1\n2,3") == 6
