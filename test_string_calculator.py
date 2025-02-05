@@ -28,3 +28,8 @@ def test_newline_delimiter():
     calculator = StringCalculator()
     # "1\n2,3" => 6
     assert calculator.add("1\n2,3") == 6
+
+
+def test_custom_delimiter_single_char():
+    calculator = StringCalculator()
+    assert calculator.add("//;\n1;2") == 3
