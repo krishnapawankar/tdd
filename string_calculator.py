@@ -1,5 +1,7 @@
 # string_calculator.py
 
+import re
+
 class StringCalculator:
     def __init__(self):
         self._call_count = 0
@@ -13,13 +15,34 @@ class StringCalculator:
         if not numbers:
             return 0
 
-        delimiter = ","
-        if numbers.startswith("//"):
-            delimiter = numbers[2]
-            numbers = numbers.split("\n", 1)[1]
+        # Default delimiter(s):
+        delimiters = ["," , "\n"]
 
-        numbers = numbers.replace("\n", delimiter)
-        parts = numbers.split(delimiter)
+        # Check if string starts with //
+        if numbers.startswith("//"):
+            # Check for bracketed delimiters:
+            # e.g. //[***]\n
+            pattern = r"^//\[(.+)\]\n"
+            match = re.match(pattern, numbers)
+            if match:
+                custom_delim = match.group(1)  # e.g. ***
+                # Split off the first line
+                _, numbers = numbers.split("\n", 1)
+                # Add the custom delimiter to the list
+                delimiters = [custom_delim, "\n", ","]
+            else:
+                # Single-char logic from earlier (//;\n)
+                delimiter = numbers[2]
+                # Remove the '//' and delimiter + newline
+                numbers = numbers.split("\n", 1)[1]
+                delimiters = [delimiter, "\n", ","]
+
+        # Build a regex pattern to split on *any* of the delimiters
+        # We escape them in case they have special regex characters
+        delimiters_escaped = [re.escape(d) for d in delimiters]
+        split_pattern = "|".join(delimiters_escaped)
+
+        parts = re.split(split_pattern, numbers)
 
         negatives = []
         total = 0
