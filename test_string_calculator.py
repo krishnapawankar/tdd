@@ -41,3 +41,12 @@ def test_negative_numbers_throw_exception():
         calculator.add("1,-2,3")
     assert "Negatives not allowed:" in str(ex.value)
     assert "-2" in str(ex.value)
+
+
+def test_multiple_negatives_throw_exception():
+    calculator = StringCalculator()
+    with pytest.raises(Exception) as ex:
+        calculator.add("-1,-2,3")
+    assert "Negatives not allowed:" in str(ex.value)
+    assert "-1" in str(ex.value)
+    assert "-2" in str(ex.value)
