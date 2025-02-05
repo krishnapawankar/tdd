@@ -50,3 +50,10 @@ def test_multiple_negatives_throw_exception():
     assert "Negatives not allowed:" in str(ex.value)
     assert "-1" in str(ex.value)
     assert "-2" in str(ex.value)
+
+
+def test_get_called_count():
+    calculator = StringCalculator()
+    calculator.add("1,2")
+    calculator.add("3")
+    assert calculator.get_called_count() == 2
