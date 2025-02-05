@@ -63,3 +63,8 @@ def test_ignore_numbers_greater_than_1000():
     calculator = StringCalculator()
     assert calculator.add("2,1001") == 2   # 1001 ignored
     assert calculator.add("1000,1001,2") == 1002  # 1000 included, 1001 ignored
+
+
+def test_delimiter_of_any_length():
+    calculator = StringCalculator()
+    assert calculator.add("//[***]\n1***2***3") == 6
