@@ -29,7 +29,7 @@ class StringCalculator:
             value = int(p)
             if value < 0:
                 negatives.append(value)
-            else:
+            elif value <= 1000:
                 total += value
 
         if negatives:
