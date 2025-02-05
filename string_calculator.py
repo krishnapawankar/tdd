@@ -15,34 +15,33 @@ class StringCalculator:
         if not numbers:
             return 0
 
-        # Default delimiter(s):
-        delimiters = ["," , "\n"]
+        # Default delimiters
+        delimiters = [",", "\n"]
 
-        # Check if string starts with //
+        # Check for custom delimiters
         if numbers.startswith("//"):
-            # Check for bracketed delimiters:
-            # e.g. //[***]\n
-            pattern = r"^//\[(.+)\]\n"
-            match = re.match(pattern, numbers)
-            if match:
-                custom_delim = match.group(1)  # e.g. ***
-                # Split off the first line
-                _, numbers = numbers.split("\n", 1)
-                # Add the custom delimiter to the list
-                delimiters = [custom_delim, "\n", ","]
+            # Example: //[delim1][delim2]\n...
+            # We'll split once at newline, parse everything in the first line after '//'
+            header, numbers = numbers.split("\n", 1)
+            # header might be "//[***][%%]" for example
+            # find all bracketed delimiters
+            bracketed = re.findall(r"\[(.*?)\]", header)  # captures anything inside [...]
+            if bracketed:
+                # we have one or more bracketed delimiters
+                delimiters = list(bracketed)  # e.g. ["***", "%%"]
             else:
-                # Single-char logic from earlier (//;\n)
-                delimiter = numbers[2]
-                # Remove the '//' and delimiter + newline
-                numbers = numbers.split("\n", 1)[1]
-                delimiters = [delimiter, "\n", ","]
+                # single char delimiter fallback
+                delimiter = header[2]  # e.g. ;
+                delimiters = [delimiter]
 
-        # Build a regex pattern to split on *any* of the delimiters
-        # We escape them in case they have special regex characters
+            # keep comma and newline in the pattern
+            delimiters.append("\n")
+            delimiters.append(",")
+
+        # Build a regex pattern
         delimiters_escaped = [re.escape(d) for d in delimiters]
-        split_pattern = "|".join(delimiters_escaped)
-
-        parts = re.split(split_pattern, numbers)
+        pattern = "|".join(delimiters_escaped)
+        parts = re.split(pattern, numbers)
 
         negatives = []
         total = 0
@@ -56,6 +55,5 @@ class StringCalculator:
                 total += value
 
         if negatives:
-            raise Exception(f"Negatives not allowed: {','.join(map(str, negatives))}")
-
+            raise Exception(f"Negatives not allowed: " + ",".join(map(str, negatives)))
         return total
