@@ -17,3 +17,8 @@ def test_single_number_returns_value():
 def test_two_numbers_comma_delimited():
     calculator = StringCalculator()
     assert calculator.add("1,2") == 3
+
+
+def test_unknown_amount_of_numbers():
+    calculator = StringCalculator()
+    assert calculator.add("1,2,3,4") == 10
