@@ -57,3 +57,9 @@ def test_get_called_count():
     calculator.add("1,2")
     calculator.add("3")
     assert calculator.get_called_count() == 2
+
+
+def test_ignore_numbers_greater_than_1000():
+    calculator = StringCalculator()
+    assert calculator.add("2,1001") == 2   # 1001 ignored
+    assert calculator.add("1000,1001,2") == 1002  # 1000 included, 1001 ignored
